@@ -23,8 +23,8 @@ export default function BounceMaterialBall() {
       45,
       window.innerWidth / window.innerHeight
     );
-    camera.position.y = 1.5;
-    camera.position.z = 6;
+    camera.position.y = 10;
+    camera.position.z = 10;
     scene.add(camera);
 
     const orbitcontrols: OrbitControls = new OrbitControls(
