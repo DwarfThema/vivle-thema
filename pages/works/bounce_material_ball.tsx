@@ -26,7 +26,6 @@ export default function BounceMaterialBall() {
       antialias: true,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
 
     const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(
       45,
