@@ -14,6 +14,7 @@ import {
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { render } from "react-dom";
+import Link from "next/link";
 
 export default function BounceMaterialBall() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -118,6 +119,9 @@ export default function BounceMaterialBall() {
   return (
     <>
       <Layout seoTitle="Bounce_Material_Ball">
+        <Link href="/" className="fixed top-2 left-2 text-2xl">
+          ⬅️
+        </Link>
         <div className="bg-black w-full h-full text-white flex items-center justify-center">
           <canvas ref={canvasRef} id="canvas"></canvas>
         </div>
