@@ -118,14 +118,14 @@ export default function BounceMaterialBall() {
   }, [canvasRef]);
   return (
     <>
+      <Link href="/" className="fixed top-2 left-2 text-2xl">
+        ⬅️
+      </Link>
       <div className="bg-black w-full h-full text-white flex items-center justify-center">
         <canvas ref={canvasRef} id="canvas"></canvas>
       </div>
       {/* 
       <Layout seoTitle="Bounce_Material_Ball">
-        <Link href="/" className="fixed top-2 left-2 text-2xl">
-          ⬅️
-        </Link>
       </Layout> */}
     </>
   );
