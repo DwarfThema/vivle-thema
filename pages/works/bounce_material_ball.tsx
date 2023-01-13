@@ -30,7 +30,7 @@ export default function BounceMaterialBall() {
 
     const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(
       45,
-      window.innerWidth / window.innerHeight
+      window.innerWidth / (window.innerHeight * 2)
     );
     camera.position.y = 10;
     camera.position.z = 10;
@@ -122,12 +122,8 @@ export default function BounceMaterialBall() {
         <Link href="/" className="fixed top-2 left-2 text-2xl">
           ⬅️
         </Link>
-        <div className="bg-black w-screen h-screen text-white flex items-center justify-center">
-          <canvas
-            className="w-screen h-screen"
-            ref={canvasRef}
-            id="canvas"
-          ></canvas>
+        <div className="bg-black w-full h-full text-white flex items-center justify-center">
+          <canvas ref={canvasRef} id="canvas"></canvas>
         </div>
       </Layout>
     </>
