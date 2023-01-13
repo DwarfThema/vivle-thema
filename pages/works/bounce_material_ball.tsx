@@ -123,7 +123,11 @@ export default function BounceMaterialBall() {
           ⬅️
         </Link>
         <div className="bg-black w-screen h-screen text-white flex items-center justify-center">
-          <canvas ref={canvasRef} id="canvas"></canvas>
+          <canvas
+            className="w-screen h-screen"
+            ref={canvasRef}
+            id="canvas"
+          ></canvas>
         </div>
       </Layout>
     </>
