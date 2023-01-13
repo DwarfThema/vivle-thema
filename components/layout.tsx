@@ -7,10 +7,12 @@ interface LayoutProps {
 export default function Layout({ children, seoTitle }: LayoutProps) {
   return (
     <>
-      <Head>
-        <title>{seoTitle} | VivleThea 3D Interactive</title>
-      </Head>
-      <div className="w-screen h-screen">{children}</div>
+      <div className="w-screen h-screen">
+        <Head>
+          <title>{seoTitle} | VivleThea 3D Interactive</title>
+        </Head>
+        {children}
+      </div>
     </>
   );
 }
