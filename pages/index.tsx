@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <>
-      <Layout seoTitle="Home">
+      <Layout seoTitle="Home" isMain={true}>
         <div className="bg-black w-screen h-screen text-white flex justify-center ">
           <div className="h-screen flex flex-col items-center justify-center w-64">
             <div className="text-4xl font-medium text-center">
