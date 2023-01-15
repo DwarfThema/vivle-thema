@@ -21,6 +21,14 @@ export default function Home() {
               </Link>
             </li>
             <li className=" mt-1">
+              <Link
+                href="https://www.ebsgamedocu.com"
+                className="text-xl text-center w-full"
+              >
+                EBS Docuprime <br /> {`<Serious About Games>`}
+              </Link>
+            </li>
+            <li className=" mt-1">
               <Link href="/" className="text-xl text-center w-full">
                 👷🏻 Ready.. 👷🏻
               </Link>
