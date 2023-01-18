@@ -1,22 +1,42 @@
 import { Inter } from "@next/font/google";
 import Layout from "../components/layout";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import UseFollowPointer from "../components/useFollowPointer";
 import { motion } from "framer-motion";
+import { UseCls } from "../components/useCls";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const mouseFollower = useRef(null);
   const { x, y } = UseFollowPointer(mouseFollower);
+
+  const [width, setWidth] = useState(0);
+  const resizeWindow = () => {
+    setWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    window.addEventListener("resize", resizeWindow);
+    console.log(width);
+
+    return () => {
+      window.removeEventListener("resize", resizeWindow);
+    };
+  }, [width]);
+
   return (
     <Layout seoTitle="Home" isMain={true}>
       <div className="bg-black text-white flex justify-center ">
         <div className="h-screen flex flex-col items-center justify-center w-64">
           <motion.div
             ref={mouseFollower}
-            className=" h-10 w-10 rounded-full border-white border-dotted border-2 absolute"
+            className={UseCls(
+              "h-10 w-10 rounded-full border-white border-dotted border-2 absolute",
+              width <= 1025 ? "-z-30" : ""
+            )}
             animate={{ x, y }}
             transition={{
               type: "spring",
