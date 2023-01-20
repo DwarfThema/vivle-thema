@@ -27,6 +27,8 @@ export default function BounceMaterialBall() {
       antialias: true,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.7;
 
     const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(
       45,
@@ -36,24 +38,17 @@ export default function BounceMaterialBall() {
     camera.position.z = 10;
     scene.add(camera);
 
-    const orbitcontrols: OrbitControls = new OrbitControls(
-      camera,
-      renderer.domElement
-    );
-
-    orbitcontrols.addEventListener("change", render);
-    orbitcontrols.target.set(0, 0, -0.2);
-    orbitcontrols.update();
-
     //////// Lighting ////////
 
-    const ambientLight: AmbientLight = new THREE.AmbientLight("white", 0.7);
-    const dirLit: DirectionalLight = new THREE.DirectionalLight("white", 1);
+    //const ambientLight: AmbientLight = new THREE.AmbientLight("blue", 0.3);
+    /*     const dirLit: DirectionalLight = new THREE.DirectionalLight("white", 1);
     dirLit.position.x = -2;
-    dirLit.position.z = 2;
-    scene.add(ambientLight);
+    dirLit.position.z = 2; */
+    //scene.add(ambientLight);
 
     renderer.render(scene, camera);
+
+    let mixer: AnimationMixer;
 
     //////// HDRI ////////
     new RGBELoader().load(
@@ -62,30 +57,44 @@ export default function BounceMaterialBall() {
         hdrmap.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = hdrmap;
         scene.environment = hdrmap;
+        render();
 
-        renderer.toneMapping = ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 0.7;
+        //////// Mesh Load ////////
+        const gltfLoader: GLTFLoader = new GLTFLoader();
+        let ballModel: THREE.Object3D;
+        gltfLoader.load("/bounce_material_ball/BounceBall_Mtl.glb", (json) => {
+          ballModel = json.scene.children[0];
+          scene.add(ballModel);
+
+          //////// Material ////////
+          const mesh = ballModel.children[0] as THREE.Mesh;
+          mesh.material = new THREE.MeshPhysicalMaterial({
+            color: "red",
+          });
+
+          mixer = new THREE.AnimationMixer(ballModel);
+          const ballAnim = mixer.clipAction(json.animations[0]);
+          const bounceAnim = mixer.clipAction(json.animations[1]);
+          ballAnim.play();
+          bounceAnim.play();
+
+          render();
+        });
       }
     );
 
-    //////// Mesh Load ////////
+    //////// orbitcontorl ////////
 
-    const gltfLoader: GLTFLoader = new GLTFLoader();
-    let mixer: AnimationMixer;
-    gltfLoader.load("/bounce_material_ball/BounceBall_Color.glb", (json) => {
-      const ball = json.scene.children[0];
-      const mtl: MeshStandardMaterial = new THREE.MeshStandardMaterial({
-        color: "white",
-      });
+    const orbitcontrols: OrbitControls = new OrbitControls(
+      camera,
+      renderer.domElement
+    );
 
-      scene.add(ball);
-
-      mixer = new THREE.AnimationMixer(ball);
-      const ballAnim = mixer.clipAction(json.animations[0]);
-      const bounceAnim = mixer.clipAction(json.animations[1]);
-      ballAnim.play();
-      bounceAnim.play();
-    });
+    orbitcontrols.addEventListener("change", render);
+    orbitcontrols.target.set(0, 0, -1);
+    orbitcontrols.minDistance = 5;
+    orbitcontrols.maxDistance = 15;
+    orbitcontrols.update();
 
     //////// Life Cycle _ Update ////////
     const clock: Clock = new THREE.Clock();
@@ -117,12 +126,10 @@ export default function BounceMaterialBall() {
     Update();
   }, [canvasRef]);
   return (
-    <>
-      <Layout seoTitle="Bounce_Material_Ball">
-        <div className="bg-black w-full h-full text-white flex items-center justify-center">
-          <canvas ref={canvasRef} id="canvas"></canvas>
-        </div>
-      </Layout>
-    </>
+    <Layout seoTitle="Bounce_Material_Ball">
+      <div className="bg-black w-full h-full text-white flex items-center justify-center">
+        <canvas ref={canvasRef} id="canvas"></canvas>
+      </div>
+    </Layout>
   );
 }

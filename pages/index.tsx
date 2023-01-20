@@ -20,7 +20,6 @@ export default function Home() {
   useEffect(() => {
     setWidth(window.innerWidth);
     window.addEventListener("resize", resizeWindow);
-    console.log(width);
 
     return () => {
       window.removeEventListener("resize", resizeWindow);
