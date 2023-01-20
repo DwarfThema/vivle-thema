@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const mouseFollower = useRef(null);
-  const { x, y } = UseFollowPointer(mouseFollower);
+  const { x: orientationX, y: orientationY } = UseFollowPointer(mouseFollower);
 
   const [width, setWidth] = useState(0);
   const resizeWindow = () => {
@@ -33,13 +33,14 @@ export default function Home() {
           <motion.div
             ref={mouseFollower}
             className={UseCls(
-              "h-10 w-10 rounded-full border-white border-dotted border-2 absolute",
+              "h-5 w-5 rounded-full border-white border-dotted border-2 absolute",
               width <= 1025 ? "-z-30" : ""
             )}
-            animate={{ x, y }}
+            animate={{ x: orientationX, y: orientationY }}
             transition={{
               type: "spring",
-              damping: 20,
+              damping: 50,
+              stiffness: 400,
             }}
           />
           <div className="text-4xl font-medium text-center">
