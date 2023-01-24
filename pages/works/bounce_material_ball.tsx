@@ -66,17 +66,10 @@ export default function BounceMaterialBall() {
           const diffuse = textureLoader.load(
             "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_Color.jpg"
           );
-          diffuse.encoding = THREE.sRGBEncoding;
-          diffuse.wrapS = THREE.RepeatWrapping;
-          diffuse.wrapT = THREE.RepeatWrapping;
-          diffuse.repeat.x = 1;
-          diffuse.repeat.y = 1;
 
           const noraml = textureLoader.load(
             "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_NormalDX.jpg"
           );
-          noraml.wrapS = THREE.RepeatWrapping;
-          noraml.wrapT = THREE.RepeatWrapping;
 
           const displacement = textureLoader.load(
             "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_Displacement.jpg"
