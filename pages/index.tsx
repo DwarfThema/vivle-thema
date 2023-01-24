@@ -28,21 +28,8 @@ export default function Home() {
 
   return (
     <Layout seoTitle="Home" isMain={true}>
-      <div className="bg-black text-white flex justify-center ">
-        <div className="h-screen flex flex-col items-center justify-center w-64">
-          <motion.div
-            ref={mouseFollower}
-            className={UseCls(
-              "h-5 w-5 rounded-full border-white border-dotted border-2 absolute",
-              width <= 1025 ? "-z-30" : ""
-            )}
-            animate={{ x: orientationX, y: orientationY }}
-            transition={{
-              type: "spring",
-              damping: 50,
-              stiffness: 400,
-            }}
-          />
+      <div className="bg-black text-white flex justify-center top-0 absolute h-screen w-screen">
+        <div className=" flex flex-col items-center justify-center w-64">
           <div className="text-4xl font-medium text-center">
             VivleThema
             <br />
@@ -74,6 +61,19 @@ export default function Home() {
         Dwarfthema@gmail.com <br /> Copyright ⓒ 2023 VivleThema. All Right
         Reserved.
       </div>
+      <motion.div
+        ref={mouseFollower}
+        className={UseCls(
+          "h-5 w-5 rounded-full border-white border-dotted border-2 absolute",
+          width <= 1025 ? "-z-30" : ""
+        )}
+        animate={{ x: orientationX, y: orientationY }}
+        transition={{
+          type: "spring",
+          damping: 50,
+          stiffness: 400,
+        }}
+      />
     </Layout>
   );
 }
