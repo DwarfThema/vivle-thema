@@ -9,6 +9,7 @@ interface LayoutProps {
 export default function Layout({ children, seoTitle, isMain }: LayoutProps) {
   return (
     <>
+      {children}
       <Head>
         <title>{seoTitle} | VivleThema 3D Interactive</title>
         <meta content="Vivle-Thema" property="og:title" />
@@ -21,7 +22,6 @@ export default function Layout({ children, seoTitle, isMain }: LayoutProps) {
           ⬅️
         </Link>
       )}
-      {children}
     </>
   );
 }
