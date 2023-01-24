@@ -4,17 +4,15 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useEffect, useRef } from "react";
 import {
   ACESFilmicToneMapping,
-  AmbientLight,
   AnimationMixer,
   Clock,
-  Color,
-  DirectionalLight,
-  MeshStandardMaterial,
+  TextureLoader,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { render } from "react-dom";
 import Link from "next/link";
+import { addEmitHelpers } from "typescript";
 
 export default function BounceMaterialBall() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,21 +32,18 @@ export default function BounceMaterialBall() {
       45,
       window.innerWidth / window.innerHeight
     );
-    camera.position.y = 10;
-    camera.position.z = 10;
+    camera.position.set(5, 1, 10);
+    const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
+
+    const cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
+
     scene.add(camera);
-
-    //////// Lighting ////////
-
-    //const ambientLight: AmbientLight = new THREE.AmbientLight("blue", 0.3);
-    /*     const dirLit: DirectionalLight = new THREE.DirectionalLight("white", 1);
-    dirLit.position.x = -2;
-    dirLit.position.z = 2; */
-    //scene.add(ambientLight);
 
     renderer.render(scene, camera);
 
     let mixer: AnimationMixer;
+    let mesh: THREE.Mesh;
+    let ballModel: THREE.Object3D;
 
     //////// HDRI ////////
     new RGBELoader().load(
@@ -61,18 +56,55 @@ export default function BounceMaterialBall() {
 
         //////// Mesh Load ////////
         const gltfLoader: GLTFLoader = new GLTFLoader();
-        let ballModel: THREE.Object3D;
         gltfLoader.load("/bounce_material_ball/BounceBall_Mtl.glb", (json) => {
           ballModel = json.scene.children[0];
           scene.add(ballModel);
 
           //////// Material ////////
-          const mesh = ballModel.children[0] as THREE.Mesh;
+          const textureLoader = new THREE.TextureLoader() as TextureLoader;
+
+          const diffuse = textureLoader.load(
+            "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_Color.jpg"
+          );
+          diffuse.encoding = THREE.sRGBEncoding;
+          diffuse.wrapS = THREE.RepeatWrapping;
+          diffuse.wrapT = THREE.RepeatWrapping;
+          diffuse.repeat.x = 1;
+          diffuse.repeat.y = 1;
+
+          const noraml = textureLoader.load(
+            "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_NormalDX.jpg"
+          );
+          noraml.wrapS = THREE.RepeatWrapping;
+          noraml.wrapT = THREE.RepeatWrapping;
+
+          const displacement = textureLoader.load(
+            "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_Displacement.jpg"
+          );
+
+          const metalness = textureLoader.load(
+            "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_Metalness.jpg"
+          );
+
+          const roughness = textureLoader.load(
+            "/bounce_material_ball/ChristmasTreeOrnament/ChristmasTreeOrnament003_2K_Roughness.jpg"
+          );
+
+          mesh = ballModel.children[0] as THREE.Mesh;
           mesh.material = new THREE.MeshPhysicalMaterial({
-            color: "red",
+            map: diffuse,
+            normalMap: noraml,
+            displacementMap: displacement,
+            displacementScale: 0.01,
+            metalnessMap: metalness,
+            metalness: 1,
+            roughnessMap: roughness,
           });
 
+          //////// AnimationClip ////////
           mixer = new THREE.AnimationMixer(ballModel);
+          console.log(json);
+
           const ballAnim = mixer.clipAction(json.animations[0]);
           const bounceAnim = mixer.clipAction(json.animations[1]);
           ballAnim.play();
@@ -94,6 +126,7 @@ export default function BounceMaterialBall() {
     orbitcontrols.target.set(0, 0, -1);
     orbitcontrols.minDistance = 5;
     orbitcontrols.maxDistance = 15;
+    orbitcontrols.enablePan = false;
     orbitcontrols.update();
 
     //////// Life Cycle _ Update ////////
