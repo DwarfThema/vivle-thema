@@ -28,7 +28,7 @@ export default function Home() {
 
   return (
     <Layout seoTitle="Home" isMain={true}>
-      <div className="bg-black text-white flex justify-center top-0 absolute h-screen w-screen">
+      <div className="bg-black text-white flex justify-center top-0 absolute w-screen">
         <div className=" flex flex-col items-center justify-center w-64">
           <div className="text-4xl font-medium text-center">
             VivleThema
