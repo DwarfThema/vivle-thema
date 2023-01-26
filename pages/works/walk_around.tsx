@@ -118,7 +118,7 @@ export default function WalkAround() {
     const playerCollider = new Capsule(
       new THREE.Vector3(0, 0.35, 0),
       new THREE.Vector3(0, 1, 0),
-      0.35
+      0.2
     );
 
     const playerVelocity = new THREE.Vector3();
@@ -338,7 +338,7 @@ export default function WalkAround() {
     }
 
     function controls(deltaTime: number) {
-      const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
+      const speedDelta = deltaTime * (playerOnFloor ? 25 : 8) * 0.5;
 
       if (keyStates["KeyW"]) {
         playerVelocity.add(getForwardVector().multiplyScalar(speedDelta));
@@ -356,14 +356,14 @@ export default function WalkAround() {
 
       if (playerOnFloor) {
         if (keyStates["Space"]) {
-          playerVelocity.y = 15;
+          playerVelocity.y = 6;
         }
       }
     }
 
     const loader = new GLTFLoader().setPath("/walk_around/");
 
-    loader.load("collision-world.glb", (gltf) => {
+    loader.load("KingsMan.glb", (gltf) => {
       scene.add(gltf.scene);
       worldOctree.fromGraphNode(gltf.scene);
       // 확인 하기
