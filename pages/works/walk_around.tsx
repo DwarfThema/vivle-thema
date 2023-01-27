@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Layout from "../../components/layout";
 import * as THREE from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
@@ -19,6 +19,8 @@ import {
 } from "three";
 import { Capsule } from "three/examples/jsm/math/Capsule";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
+import Btn from "../../components/btn";
 
 interface ISphere {
   mesh: Mesh;
@@ -29,10 +31,18 @@ interface ISphere {
 export default function WalkAround() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const [width, setWidth] = useState(0);
+  const resizeWindow = () => {
+    setWidth(window.innerWidth);
+  };
+
+  const [hdrMap, setHdrMap] = useState<string>(`quattro_canti_4k.hdr`);
+
   useEffect(() => {
+    setWidth(window.innerWidth);
+
     const clock: Clock = new THREE.Clock();
     const scene: Scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x88ccee);
     scene.fog = new THREE.Fog(0x88ccee, 0, 50);
 
     const camera: PerspectiveCamera = new THREE.PerspectiveCamera(
@@ -91,7 +101,7 @@ export default function WalkAround() {
       5
     );
     const sphereMaterial: MeshLambertMaterial = new THREE.MeshLambertMaterial({
-      color: 0xbbbb44,
+      color: 0x4834d4,
     });
 
     const spheres: ISphere[] = [];
@@ -163,6 +173,7 @@ export default function WalkAround() {
     window.addEventListener("resize", onWindowResize);
 
     function onWindowResize() {
+      resizeWindow();
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       //변경된 값을 카메라에 적용
@@ -337,6 +348,10 @@ export default function WalkAround() {
       return playerDirection;
     }
 
+    const hdrLoader = new RGBELoader().setPath("/walk_around/hdri/");
+
+    const gltfLoader = new GLTFLoader().setPath("/walk_around/");
+
     function controls(deltaTime: number) {
       const speedDelta = deltaTime * (playerOnFloor ? 25 : 8) * 0.5;
 
@@ -353,6 +368,12 @@ export default function WalkAround() {
       if (keyStates["KeyD"]) {
         playerVelocity.add(getSideVector().multiplyScalar(speedDelta));
       }
+      if (keyStates["Digit1"]) {
+        setHdrMap(`gothic_manor_01_4k.hdr`);
+      }
+      if (keyStates["Digit2"]) {
+        setHdrMap(`quattro_canti_4k.hdr`);
+      }
 
       if (playerOnFloor) {
         if (keyStates["Space"]) {
@@ -361,31 +382,37 @@ export default function WalkAround() {
       }
     }
 
-    const loader = new GLTFLoader().setPath("/walk_around/");
+    hdrLoader.load(`${hdrMap}`, (hdr) => {
+      hdr.mapping = THREE.EquirectangularReflectionMapping;
+      scene.background = hdr;
+      scene.environment = hdr;
 
-    loader.load("KingsMan.glb", (gltf) => {
-      scene.add(gltf.scene);
-      worldOctree.fromGraphNode(gltf.scene);
-      // 확인 하기
+      renderer.render(scene, camera);
 
-      gltf.scene.traverse((child) => {
-        const mesh = child as THREE.Mesh;
-        if (mesh.isMesh) {
-          mesh.castShadow = true;
-          mesh.receiveShadow = true;
+      gltfLoader.load("KingsMan.glb", (gltf) => {
+        scene.add(gltf.scene);
+        worldOctree.fromGraphNode(gltf.scene);
+        // 확인 하기
 
-          const mtl = mesh.material as THREE.MeshStandardMaterial;
-          if (mtl.map) {
-            mtl.map.anisotropy = 4;
+        gltf.scene.traverse((child) => {
+          const mesh = child as THREE.Mesh;
+          if (mesh.isMesh) {
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+
+            const mtl = mesh.material as THREE.MeshStandardMaterial;
+            if (mtl.map) {
+              mtl.map.anisotropy = 4;
+            }
           }
-        }
+        });
+
+        const helper = new OctreeHelper(worldOctree, 0xff0000);
+        helper.visible = false;
+        scene.add(helper);
+
+        animate();
       });
-
-      const helper = new OctreeHelper(worldOctree, 0xff0000);
-      helper.visible = false;
-      scene.add(helper);
-
-      animate();
     });
 
     function teleportPlayerIfOob() {
@@ -409,14 +436,56 @@ export default function WalkAround() {
       }
 
       renderer.render(scene, camera);
-
       requestAnimationFrame(animate);
     }
   }, [canvasRef]);
 
   return (
     <Layout seoTitle="Walk_Around">
-      <div className="bg-black w-full h-full text-white flex items-center justify-center">
+      {/*       <div>
+        <Btn
+          onClick={() => {
+            setHdrMap(`gothic_manor_01_4k.hdr`);
+          }}
+          color="red"
+        ></Btn>
+        <Btn
+          onClick={() => {
+            setHdrMap(`quattro_canti_4k.hdr`);
+          }}
+          color="blue"
+        ></Btn>
+        <Btn
+          onClick={() => {
+            setHdrMap(`shanghai_bund_4k.hdr`);
+          }}
+          color="amber"
+        ></Btn>
+        <Btn
+          onClick={() => {
+            setHdrMap(`urban_street_01_4k.hdr`);
+          }}
+          color="green"
+        ></Btn>
+        <Btn
+          onClick={() => {
+            setHdrMap(`venice_sunset_4k.hdr`);
+          }}
+          color="purple"
+        ></Btn>
+      </div> */}
+
+      {width >= 1025 ? null : (
+        <div className="absolute h-screen w-full flex justify-around items-center">
+          <div className="bg-white absolute z-10 rounded-lg">
+            <div className=" text-red-900 text-4xl text-center font-extrabold px-5 py-2">
+              DESKTOP ONLY
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-black w-full h-full text-white flex items-center justify-center absolute">
         <canvas ref={canvasRef} id="canvas"></canvas>
       </div>
     </Layout>

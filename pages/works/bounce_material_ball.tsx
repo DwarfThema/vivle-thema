@@ -10,9 +10,6 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
-import { render } from "react-dom";
-import Link from "next/link";
-import { addEmitHelpers } from "typescript";
 
 export default function BounceMaterialBall() {
   const canvasRef = useRef<HTMLCanvasElement>(null);

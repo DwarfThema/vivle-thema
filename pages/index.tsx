@@ -36,7 +36,12 @@ export default function Home() {
             3D Interactive
           </div>
           <ul className="mt-7 items-start w-full list-disc z-10">
-            <li className="">
+            <li className="mt-1">
+              <Link href="/works/walk_around" className="text-xl">
+                Walk Around
+              </Link>
+            </li>
+            <li className="mt-1">
               <Link href="/works/bounce_material_ball" className="text-xl">
                 Bounce Material Ball
               </Link>
@@ -49,11 +54,11 @@ export default function Home() {
                 EBS Docuprime <br /> {`<Serious About Games>`}
               </Link>
             </li>
-            <li className=" mt-1">
+            {/*             <li className=" mt-1">
               <Link href="/" className="text-xl text-center w-full">
                 👷🏻 Ready.. 👷🏻
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

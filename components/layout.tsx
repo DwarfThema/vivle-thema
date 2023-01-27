@@ -17,7 +17,7 @@ export default function Layout({ children, seoTitle, isMain }: LayoutProps) {
         <meta content="/dwarfthema.png" property="og:image" />
       </Head>
       {isMain ? null : (
-        <Link href="/" className="fixed top-2 left-2 text-2xl">
+        <Link href="/" className="fixed top-2 left-2 text-2xl z-50">
           ⬅️
         </Link>
       )}
