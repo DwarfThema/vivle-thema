@@ -485,7 +485,12 @@ export default function WalkAround() {
         </div>
       )}
 
-      <div className="bg-black w-full h-full text-white flex items-center justify-center absolute">
+      <div className="bg-black w-full h-full text-white flex items-center justify-center absolute -z-20">
+        <div className="bg-white absolute -z-30 rounded-lg">
+          <div className=" text-red-900 text-4xl text-center font-extrabold px-5 py-2">
+            now Loading
+          </div>
+        </div>
         <canvas ref={canvasRef} id="canvas"></canvas>
       </div>
     </Layout>
