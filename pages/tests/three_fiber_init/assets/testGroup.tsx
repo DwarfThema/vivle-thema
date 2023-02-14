@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { Group, Mesh } from "three";
 
 import { OrbitControls } from "@react-three/drei";
+import CustomObject from "./customObject";
 /* import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 extend({ orbitControls: OrbitControls });
 //이런식으로 네이티브 three를 사용함 */
@@ -18,14 +19,19 @@ export default function TestGroup({ children }: LayoutProps) {
   const groupRef = useRef<Group>(null!);
 
   const { camera, gl } = useThree();
-  console.log(camera, gl);
+  //console.log(camera, gl);
 
   useFrame((state, delta) => {
     if (cubeRef.current) {
       // rotates the object
       cubeRef.current.rotation.x += 0.01;
 
-      groupRef.current.rotation.y += delta;
+      const angle = state.clock.elapsedTime;
+      state.camera.position.x = Math.sin(angle / 3) * 8;
+      state.camera.position.z = Math.cos(angle / 3) * 8;
+      state.camera.lookAt(0, 0, 0);
+
+      //groupRef.current.rotation.y += delta;
       //delta를 사용해서 deltatime을 적용
     }
   });
@@ -63,6 +69,8 @@ export default function TestGroup({ children }: LayoutProps) {
         <planeGeometry />
         <meshStandardMaterial color="greenyellow" />
       </mesh>
+
+      <CustomObject />
       <ambientLight intensity={0.1} />
       <directionalLight position={[0, 0, 5]} color="red" />
     </>
