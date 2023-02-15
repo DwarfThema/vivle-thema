@@ -2,7 +2,12 @@ import { extend, useFrame, useThree } from "@react-three/fiber";
 import { useRef, useState } from "react";
 import { Group, Mesh } from "three";
 
-import { OrbitControls } from "@react-three/drei";
+import {
+  Html,
+  OrbitControls,
+  PivotControls,
+  TransformControls,
+} from "@react-three/drei";
 import CustomObject from "./customObject";
 /* import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 extend({ orbitControls: OrbitControls });
@@ -16,12 +21,13 @@ export default function TestGroup({ children }: LayoutProps) {
   const [rotation, setRotation] = useState<number>(0);
 
   const cubeRef = useRef<Mesh>(null!);
+  const sphereRef = useRef<Mesh>(null!);
   const groupRef = useRef<Group>(null!);
 
   const { camera, gl } = useThree();
   //console.log(camera, gl);
 
-  useFrame((state, delta) => {
+  /*   useFrame((state, delta) => {
     if (cubeRef.current) {
       // rotates the object
       cubeRef.current.rotation.x += 0.01;
@@ -34,27 +40,52 @@ export default function TestGroup({ children }: LayoutProps) {
       //groupRef.current.rotation.y += delta;
       //delta를 사용해서 deltatime을 적용
     }
-  });
+  }); */
 
   return (
     <>
-      <OrbitControls />
+      <OrbitControls makeDefault />
 
-      <group ref={groupRef} position={[1, 2, 1]}>
-        <mesh ref={cubeRef} position={[0, 0, 0]} rotation={[10, 10, 10]}>
+      <mesh ref={sphereRef} position={[0, 0, 0]}>
+        <sphereGeometry />
+        <meshBasicMaterial args={[{ color: "red", wireframe: true }]} />
+      </mesh>
+      <TransformControls object={sphereRef} mode="scale" />
+
+      <PivotControls
+        anchor={[0, 0, 0]}
+        depthTest={false}
+        lineWidth={2}
+        axisColors={["purble", "yellow", "black"]}
+        scale={150}
+        fixed={true}
+      >
+        <mesh
+          ref={cubeRef}
+          position={[-2, -2, 0]}
+          rotation={[10, rotation, 10]}
+        >
           <boxGeometry attach="geometry" args={[1, 1, 1]} />
 
           <meshStandardMaterial attach="material" color="yellow" />
-        </mesh>
 
+          <Html
+            position={[0, -1, 0]}
+            wrapperClass="label"
+            className="text-3xl"
+            center
+            distanceFactor={6}
+            occlude={[cubeRef, sphereRef]}
+          >
+            Box
+          </Html>
+        </mesh>
+      </PivotControls>
+
+      <group ref={groupRef} position={[1, 2, 1]}>
         <mesh position-x={10} rotation={[10, 10, rotation]}>
           <torusKnotBufferGeometry />
           <meshNormalMaterial />
-        </mesh>
-
-        <mesh position={[-2, -2, -2]} rotation={[10, 10, rotation]}>
-          <sphereGeometry />
-          <meshBasicMaterial args={[{ color: "red", wireframe: true }]} />
         </mesh>
 
         <mesh position={[4, 4, 4]} rotation={[10, 10, rotation]}>
