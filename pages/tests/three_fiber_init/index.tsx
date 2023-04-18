@@ -3,6 +3,7 @@ import { Canvas, extend, useFrame } from "@react-three/fiber";
 import Layout from "../../../components/layout";
 import TestGroup from "./assets/testGroup";
 import * as THREE from "three";
+import ReflectionGroup from "./assets/reflectionGroup";
 
 export default function ThreeFiverInit() {
   return (
@@ -25,9 +26,11 @@ export default function ThreeFiverInit() {
             /* zoom: 100, */
           }}
         >
-          <TestGroup>
+          <ReflectionGroup />
+
+          {/*           <TestGroup>
             <></>
-          </TestGroup>
+          </TestGroup> */}
         </Canvas>
       </div>
     </Layout>
